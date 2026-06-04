@@ -6,6 +6,5 @@ __pycache__
 *.pyo
 *.pyd
 .env
-migrations
 .next
 node_modules
