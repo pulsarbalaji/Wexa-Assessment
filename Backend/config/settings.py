@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*%)pjesc=8%4ip@kpwzdw&x!*ib4gb6_!(=ze5kadg)=08_uj0'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",")
 
@@ -68,6 +68,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -99,6 +100,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = "config.asgi.application"
 
+STATIC_URL = '/static/'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_STORAGE = (
+    'whitenoise.storage.CompressedManifestStaticFilesStorage'
+)
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
