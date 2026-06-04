@@ -1,0 +1,9 @@
+venv
+_pyc_
+.vscode
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.env
+migrations
