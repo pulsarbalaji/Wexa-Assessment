@@ -9,11 +9,11 @@ import { LoginCredentials, SignupData } from "@/types";
 
 export function useAuth() {
   const router = useRouter();
-  const { user, isAuthenticated, isLoading, setUser, setLoading, setError, logout: storeLogout } = useAuthStore();
+  const { user, isAuthenticated, setUser, logout: storeLogout } = useAuthStore();
 
   const loginMutation = useMutation({
     mutationFn: (credentials: LoginCredentials) =>
-      authService.login(credentials),
+      authService.login(credentials.email, credentials.password),
     onSuccess: (data) => {
       setUser(data.user);
       toast.success(`Welcome back, ${data.user.username}!`);
@@ -23,7 +23,6 @@ export function useAuth() {
       const msg =
         (error as { response?: { data?: { message?: string } } })?.response
           ?.data?.message || "Invalid credentials. Please try again.";
-      setError(msg);
       toast.error(msg);
     },
   });
@@ -39,7 +38,6 @@ export function useAuth() {
       const msg =
         (error as { response?: { data?: { message?: string } } })?.response
           ?.data?.message || "Signup failed. Please try again.";
-      setError(msg);
       toast.error(msg);
     },
   });
@@ -53,7 +51,7 @@ export function useAuth() {
   return {
     user,
     isAuthenticated,
-    isLoading: isLoading || loginMutation.isPending || signupMutation.isPending,
+    isLoading: loginMutation.isPending || signupMutation.isPending,
     login: loginMutation.mutate,
     signup: signupMutation.mutate,
     logout,

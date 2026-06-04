@@ -88,7 +88,7 @@ export default function AlertsPage() {
     useMutation({
 
       mutationFn:
-        async (data) => {
+        async (data: any) => {
 
           return (
             await alertService
@@ -129,28 +129,28 @@ export default function AlertsPage() {
 
     active:
       alerts.filter(
-        (a) =>
+        (a: any) =>
           a.status ===
           "ACTIVE"
       ).length,
 
     triggered:
       alerts.filter(
-        (a) =>
+        (a: any) =>
           a.status ===
           "TRIGGERED"
       ).length,
 
     resolved:
       alerts.filter(
-        (a) =>
+        (a: any) =>
           a.status ===
           "RESOLVED"
       ).length,
 
     muted:
       alerts.filter(
-        (a) =>
+        (a: any) =>
           a.status ===
           "MUTED"
       ).length,
@@ -204,7 +204,7 @@ export default function AlertsPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {alerts.map((alert, i) => (
+            {alerts.map((alert: any, i: number) => (
               <motion.div
                 key={alert.id}
                 initial={{ opacity: 0, x: -10 }}
@@ -258,17 +258,17 @@ export default function AlertsPage() {
                   </div>
 
                   <div className="flex items-center gap-1 shrink-0">
-                    {alert.status === "active" && (
+                    {(alert.status === "ACTIVE" || alert.status === "active") && (
                       <button className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-yellow-500 hover:bg-yellow-500/10 transition-colors" title="Pause">
                         <Pause size={13} />
                       </button>
                     )}
-                    {alert.status === "paused" && (
+                    {(alert.status === "MUTED" || alert.status === "paused") && (
                       <button className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-emerald-500 hover:bg-emerald-500/10 transition-colors" title="Resume">
                         <Play size={13} />
                       </button>
                     )}
-                    {alert.status === "triggered" && (
+                    {(alert.status === "TRIGGERED" || alert.status === "triggered") && (
                       <button
                         className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-blue-500 hover:bg-blue-500/10 transition-colors"
                         title="Resolve"
