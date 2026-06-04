@@ -396,5 +396,112 @@ LinkedIn:
 ⭐ Thank You
 
 Thank you for reviewing this assignment.
+# Pulse Analytics Platform
 
-I enjoyed designing a scalable, enterprise-grade analytics platform and would be excited to discuss the architecture decisions and implementation details further.
+## Overview
+
+A scalable analytics platform built using Django, Next.js, PostgreSQL, WebSockets, and Celery for real-time dashboards, alerts, and reporting.
+
+## Tech Stack
+
+### Frontend
+
+* Next.js
+* TypeScript
+* Tailwind CSS
+* React Query
+* Zustand
+
+### Backend
+
+* Django
+* Django REST Framework
+* Django Channels
+* JWT Authentication
+* Celery
+
+### Database & Infrastructure
+
+* PostgreSQL
+* Redis
+* Render
+* Vercel
+
+## Features
+
+* User Authentication (JWT)
+* Dashboard Analytics
+* Alerts Management
+* Event Tracking
+* Reports Generation
+* Real-time Updates using WebSocket
+* Role-based Access
+
+## Local Setup
+
+### Backend
+
+```bash
+cd Backend
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
+
+### Frontend
+
+```bash
+cd Frontend
+npm install
+npm run dev
+```
+
+## Environment Variables
+
+### Backend
+
+```env
+SECRET_KEY=
+DEBUG=
+DATABASE_URL=
+REDIS_URL=
+EMAIL_HOST=
+EMAIL_HOST_USER=
+EMAIL_HOST_PASSWORD=
+```
+
+### Frontend
+
+```env
+NEXT_PUBLIC_API_BASE_URL=
+NEXT_PUBLIC_WS_BASE_URL=
+NEXT_PUBLIC_APP_NAME=
+NEXT_PUBLIC_APP_VERSION=
+```
+
+## Live Deployment
+
+### Frontend URL
+https://wexa-assessment-hi76fit40-eik-villans-products.vercel.app/login
+
+### Backend URL
+
+https://wexa-assessment-d80d.onrender.com
+
+## Architecture Decisions
+
+* Django Channels used for real-time updates
+* JWT authentication for secure API access
+* Celery for asynchronous task processing
+* PostgreSQL for relational data storage
+* Next.js for scalable frontend rendering
+
+## Known Limitations
+
+* Celery workers may require paid infrastructure in cloud environments.
+* Free-tier services may experience cold starts.
+
+## Final Note
+
+I enjoyed designing and implementing this scalable, enterprise-grade analytics platform and would be excited to discuss the architecture decisions and implementation details further.
+
