@@ -25,72 +25,92 @@ from events.models import (
     Event
 )
 
-
 @shared_task
-def generate_reports():
+def generate_reports(
+    report_id
+):
 
-    reports = (
-        Report.objects.filter(
-            is_active=True
+    report = (
+        Report.objects
+        .select_related(
+            "dashboard"
+        )
+        .get(
+            id=report_id
         )
     )
 
-    for report in reports:
+    file_name = (
+        f"report_"
+        f"{report.id}.pdf"
+    )
 
-        file_name = (
-            f"report_"
-            f"{report.id}.pdf"
-        )
+    file_path = os.path.join(
+        settings.MEDIA_ROOT,
+        file_name
+    )
 
-        file_path = os.path.join(
-            settings.MEDIA_ROOT,
-            file_name
-        )
+    c = canvas.Canvas(
+        file_path
+    )
 
-        c = canvas.Canvas(
-            file_path
-        )
+    c.drawString(
+        100,
+        800,
+        "Analytics Report"
+    )
 
-        c.drawString(
-            100,
-            800,
-            "Analytics Report"
-        )
+    c.drawString(
+        100,
+        780,
+        f"Dashboard: "
+        f"{report.dashboard.name}"
+    )
 
-        count = (
-            Event.objects.filter(
-                organization=
-                report.
-                organization
-            ).count()
-        )
+    count = (
+        Event.objects.filter(
+            organization=
+            report.organization
+        ).count()
+    )
 
-        c.drawString(
-            100,
-            760,
-            f"Total Events: {count}"
-        )
+    c.drawString(
+        100,
+        740,
+        f"Total Events: "
+        f"{count}"
+    )
 
-        c.save()
+    c.save()
 
-        EmailMessage(
+    email = EmailMessage(
 
-            subject=
-            "Analytics Report",
+        subject=
+        "Analytics Report",
 
-            body=
-            "Attached report",
+        body=
+        "Attached report",
 
-            to=[
-                report.
-                recipient_email
-            ],
+        to=[
+            report.
+            recipient_email
+        ],
+    )
 
-        ).attach_file(
-            file_path
-        ).send()
+    email.attach_file(
+        file_path
+    )
 
-        ReportHistory.objects.create(
-            report=report,
-            file_path=file_name
-        )
+    email.send()
+
+    ReportHistory.objects.create(
+
+        report=report,
+
+        file_path=
+        file_name
+    )
+
+    return {
+        "success": True
+    }

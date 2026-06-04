@@ -13,21 +13,100 @@ from .services import (create_event,create_batch_events)
 from .selectors import get_events
 from .serializers import (EventSerializer,APIKeySerializer)
 from .services import (create_api_key,revoke_api_key,rotate_api_key)
+from .models import (Event,APIKey)
+from rest_framework.pagination import (PageNumberPagination)
+from django.db.models import Q
 
 
-class EventListAPIView(APIView):
-    """
-    List organization events
-    """
-    permission_classes = [IsAuthenticated,IsAnalystOrAbove]
+class EventPagination(PageNumberPagination):
 
-    def get(self, request):
+    page_size = 10
 
-        events = get_events(request.user)
 
-        serializer = EventSerializer(events,many=True)
+class EventListAPIView(
+    APIView
+):
 
-        return Response(serializer.data,status=status.HTTP_200_OK)
+    permission_classes = [
+        IsAuthenticated
+    ]
+
+    def get(
+        self,
+        request
+    ):
+
+        search = (
+            request.GET.get(
+                "search",
+                ""
+            )
+        )
+
+        source = (
+            request.GET.get(
+                "source",
+                ""
+            )
+        )
+
+        queryset = (
+            Event.objects.filter(
+                organization=
+                request.user
+                .organization
+            )
+        )
+
+        if search:
+
+            queryset = (
+                queryset.filter(
+
+                    Q(
+                        event_name__icontains=
+                        search
+                    )
+
+                    |
+
+                    Q(
+                        source__icontains=
+                        search
+                    )
+                )
+            )
+
+        if source:
+
+            queryset = (
+                queryset.filter(
+                    source=source
+                )
+            )
+
+        queryset = (
+            queryset.order_by(
+                "-timestamp"
+            )
+        )
+
+        paginator = (
+            EventPagination()
+        )
+
+        paginated_qs = (
+            paginator.paginate_queryset(
+                queryset,
+                request
+            )
+        )
+
+        serializer = (
+            EventSerializer(
+                paginated_qs,
+                many=True))
+        return paginator.get_paginated_response(serializer.data)
 
 
 class EventCreateAPIView(APIView):
@@ -130,4 +209,41 @@ class RotateAPIKeyAPIView(APIView):
 
         return Response(APIKeySerializer(api_key).data)
     
-    
+class APIKeyListAPIView(
+    APIView
+):
+
+    permission_classes = [
+        IsAuthenticated,
+        IsAdminOrOwner
+    ]
+
+    def get(
+        self,
+        request
+    ):
+
+        api_keys = (
+
+            APIKey.objects.filter(
+
+                organization=
+                request.user
+                .organization
+            )
+
+            .order_by(
+                "-created_at"
+            )
+        )
+
+        serializer = (
+            APIKeySerializer(
+                api_keys,
+                many=True
+            )
+        )
+
+        return Response(
+            serializer.data
+        )
