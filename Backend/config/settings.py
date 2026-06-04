@@ -113,7 +113,9 @@ STATICFILES_STORAGE = (
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+         "default": dj_database_url.parse(
+        config("DATABASE_URL")
+    ),
         'NAME': config('DATABASE_NAME'),
         'USER': config('DATABASE_USER'),
         'PASSWORD': config('DATABASE_PASSWORD'),
