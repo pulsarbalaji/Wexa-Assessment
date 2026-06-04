@@ -5,6 +5,7 @@ from rest_framework import (status)
 from authentication.permissions import (IsAdminOrOwner)
 from .serializers import (AlertSerializer)
 from .services import (create_alert)
+from .models import (Alert)
 
 class AlertCreateAPIView(APIView):
 
@@ -20,3 +21,21 @@ class AlertCreateAPIView(APIView):
 
         return Response(
             AlertSerializer(alert).data,status=status.HTTP_201_CREATED)
+    
+class AlertListAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+
+        alerts = (
+            Alert.objects.filter(
+                organization=
+                request.user.
+                organization))
+
+        serializer = AlertSerializer(alerts,many=True)
+
+        return Response(
+            serializer.data
+        )
