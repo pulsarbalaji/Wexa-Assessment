@@ -314,10 +314,10 @@ Run:
 npm run dev
 🔐 Demo Credentials
 Email:
-admin@test.com
+vijay@gmail.com
 
 Password:
-admin123
+Test-2026
 
 📷 Screenshots
 Dashboard
