@@ -173,7 +173,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:3000",]
+CORS_ALLOWED_ORIGINS = ["https://wexa-assessment-hi76fit40-eik-villans-products.vercel.app",]
 
 AUTH_USER_MODEL = "authentication.User"
 
